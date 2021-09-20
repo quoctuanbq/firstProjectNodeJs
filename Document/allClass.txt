@@ -1,0 +1,60 @@
+1.Sản phẩm
+  -id
+  -name
+  -price
+  -kichthuoc
+  -ngày nhập
+  -brand
+  -loại hàng
+  -unit
+  -kieu
+  -chat lieu
+  -giá nhập
+  -giảm giá
+  -target
+  -img
+
+2.user
+  -id
+  -name
+  -password
+  -email
+  -avatar
+3.admin
+  -id
+  -name
+  -password
+  -role
+4.order
+  -id
+  -total money
+  -number
+  -ngày bán
+  -user id
+  -ordetail id(array)
+  -note
+5.order detail
+  -id
+  -orderId
+  -product id
+  -number
+  -price
+  -user id
+  -tong cong
+6.comment
+  -id
+  -user id
+  -product id
+  -content
+7.product like
+  -id
+  -productId(array)
+  -user id
+8.cart
+   -_id
+   -userId
+   -productId
+   -gia
+   -so luong
+   -tong cong
+   -ngay add

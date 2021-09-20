@@ -1,0 +1,7 @@
+https://janeto.gitbook.io/mongodb-toan-tap/
+https://hoclaptrinh.vn/tutorial/hoc-mongodb/replica-set-trong-mongodb
+
+
+**6 quy tac thiet ke database**
+https://kipalog.com/posts/6-Quy-tac-thiet-ke-schema-MongoDB--phan-1
+** One to One relationship.

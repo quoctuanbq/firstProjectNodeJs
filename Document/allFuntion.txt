@@ -1,0 +1,42 @@
+1. Dành cho người sử dụng
+	1.1. Xem thông tin sản phẩm( xem chi tiet tung sản phẩm)
+		-Mua theo từng đối tượng
+			+Nữ (Hàng mới, Trang phục, Đầm, Đồ đi biển, Giảm giá, Trang phục thể thao, Giày)
+			+Plus Size 
+			+Trẻ em (Hàng mới, Con trai(7-14), Cô gái(7-14), Bé trai(1-6), Bé gái(1-6))
+			+Nam (Hàng mới, Trang phục, Quần, Đồ đi biển, Giảm giá, Trang phục thể thao, Giày)
+		-Mua theo từng thể loại
+			+Nữ (Áo thun, Đầm, Đồ đi biển, đồ lót, Trang phục thể thao, Giày)
+			+Nam (Áo thun, Quần short, Quần jean, Áo sơ mi, Đồ bơi, Giày)
+		-Mua theo sản phẩm vừa mới được thêm vào(dailydrop)
+		-Mua theo từng brand
+		-Mua theo các chiến dịch giảm giá
+		-Mua theo flash sale ( Dùng đồng hồ đếm giờ)
+		-Lọc sản phẩm
+			+price
+			+size
+			+kiểu
+                        +chất liệu
+	1.2. Thêm vào giỏ hàng
+		-Xem giỏ hàng nhỏ( Có thể thêm, bớt, xóa, hiển thị tổng tiền)
+		-Xem chi tiết giỏ hàng(..., có lẽ bạn cũng sẽ thích)
+	1.3. Mua hàng
+	1.4. Đánh giá sản phẩm
+        1.5. Sản phẩm yêu thích
+        1.6. Đăng nhập
+		-Đăng nhập bằng google
+		-Quên mật khẩu
+	1.7. Đăng ký
+	1.8. Đăng xuất
+        1.9. Xem thông tin đơn hàng đã mua
+        1.10. chỉnh sửa hồ sơ, cập nhật avatar
+
+2. Dành cho admin
+	-Thêm
+		+Nếu sản phẩm tồn tại thì tăng số lượng nêu không thêm mới
+	-Sửa
+	-Xóa
+3. Dành cho manager
+	-quản lý doanh thu theo tháng
+	-quản lý doanh thu theo ngày
+        -quản lý hóa đơn
