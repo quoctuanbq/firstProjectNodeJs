@@ -1,21 +1,43 @@
 
 var index = 1;
 
+var objectFilter = { category: "Đầm", target: "Nữ" }
+var ob = JSON.stringify(objectFilter);
 
 function renderOrigin() {
   render(1);
 }
-function render(indexInput,property,propertyDetails) {
+$.ajax({
+  url:"/product/pr",
+  type:"GET",
+})
+.then((data)=>{
+  $.ajax({
+    url:"/product/pr1",
+    type:"GET",
+  })
+  .then((data)=>{
+    console.log(data);
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+})
+.catch((error)=>{
+  console.log(error);
+})
+
+function render(indexInput) {
   $(".paging").html("");
   $(".allProduct").html("");
-  var ob={category:"Đầm",size:{$in:["XXL","XS"]}};
+
 
   index = indexInput;
   /*AllCard*/
   $.ajax({
     url: "/product/findAllProInPageByCategory",
     type: "POST",
-    data: { category: "Đầm", index: indexInput, numberInPage: 3, target: "Nữ",property:property,propertyDetails:propertyDetails,ob:  JSON.stringify(ob)},
+    data: { index: indexInput, numberInPage: 3, objectFilter: ob }
   })
     .then((data) => {
 
@@ -26,7 +48,7 @@ function render(indexInput,property,propertyDetails) {
           $.ajax({
             url: "/product/findAllColor",
             type: "POST",
-            data: { name: element._id, target: "Nữ",property:property,propertyDetails:propertyDetails }
+            data: { name: element._id, objectFilter: ob }
           })
             .then((dat) => {
 
@@ -63,28 +85,35 @@ function render(indexInput,property,propertyDetails) {
             });
         })();
       });
-     /*Paging*/
+      /*Paging*/
       $.ajax({
         url: "/product/findTotalByCategory",
         type: "POST",
-        data: { category: "Đầm", numberInPage: 3, target: "Nữ",property:property,propertyDetails:propertyDetails }
+        data: { numberInPage: 3, objectFilter: ob }
       })
         .then(data => {
-          $(".paging").append(`
-             <div class="totalPage"></div>
-             <div class="previousPage" onclick="changePage(${index - 1},${data})"><i class="fas fa-chevron-left"></i></div>
-             <div class="pageIndex">
-             </div>
-             <div class="nextPage" onclick="changePage(${index + 1},${data})"><i class="fas fa-chevron-right"></i></div>
-             `)
-          $(".totalPage").html("Tổng số " + data + " trang");
-          for (let i = 1; i <= data; i++) {
-            $(".pageIndex").append(`<a class="${i == index ? "active" : ""}" onclick="render(${i})">${i}</a>`)
+
+          if (typeof data == "number") {
+            $(".paging").append(`
+                  <div class="totalPage"></div>
+                  <div class="previousPage" onclick="changePage(${index - 1},${data})"><i class="fas fa-chevron-left"></i></div>
+                  <div class="pageIndex">
+                  </div>
+                  <div class="nextPage" onclick="changePage(${index + 1},${data})"><i class="fas fa-chevron-right"></i></div>
+                  `)
+            $(".totalPage").html("Tổng số " + data + " trang");
+            for (let i = 1; i <= data; i++) {
+              $(".pageIndex").append(`<a class="${i == index ? "active" : ""}" onclick="render(${i})">${i}</a>`)
+            }
+          } else {
+
+            $(".allProduct").html("<h4>Shop hiện tại chưa nhập sản phẩm này</h4>");
           }
+
 
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.message);
         })
     })
     .catch((err) => {
@@ -102,11 +131,11 @@ function setFilter() {
   $.ajax({
     url: "/filter/setFilter",
     type: "POST",
-    data: { categoryName: "Đầm", target: "Nữ" }
+    data: { objectFilter: ob }
   })
     .then((data) => {
       $(".filter").html("");
-      $(".filter").append(`<div class="resetFilter" onclick="resetFilter()">Reset Filter</div>`)   
+      $(".filter").append(`<div class="resetFilter" onclick="resetFilter()">Reset Filter</div>`)
       data.map((element) => {
         var content = `
     <div>
@@ -127,9 +156,9 @@ function setFilter() {
       $.ajax({
         url: "/filter/findMaxMinPrice",
         type: "POST",
-        data: { categoryName: "Đầm", target: "Nữ" }
+        data: { objectFilter: ob }
       })
-        .then((data) => { 
+        .then((data) => {
           var content = `
       <div>
       <div class="slider">
@@ -138,7 +167,7 @@ function setFilter() {
         </div>
         <div class="range">
 
-          <input type="range"  onchange="showVal()" class="form-range" min="${data[0].minPrice}" max="${data[0].maxPrice}" step="5000"
+          <input type="range"  onchange="showVal()" class="form-range" min="${data[0].minPrice}" value="${data[0].maxPrice}" max="${data[0].maxPrice}" step="5000"
              id="customRange3">
         </div>
         <div class="labelPrice">
@@ -192,7 +221,7 @@ function dodo1(kc) {
   $.ajax({
     url: "/filter/setDetailsProperty",
     type: "POST",
-    data: { property: k, categoryName: "Đầm", target: "Nữ" },
+    data: { property: k, objectFilter: ob },
 
   })
     .then((data) => {
@@ -201,17 +230,17 @@ function dodo1(kc) {
         if (k == "color") {
           content = `
           <img class="imgg"
-          src="${element}"
+          src="${element}" onclick="chooseColor(this)" id="${element}"
           alt="" srcset="">
           `
         }
         else
           content = `
-       <div><input class="inputFilter" type="checkbox" value="${element}" onchange="findByFilter(${index},'${k}','${element}')"  id="ck">${element}</div>
+       <div><input class="inputFilter" type="checkbox" value="${element}" onchange="findByFilter(${index},'${k}','${element}')"  id="${element}">${element}</div>
        `
         $("." + k).append(content);
       })
-   
+
 
       $("." + k).show("slow");
       $($(kc).prev()).show();
@@ -222,13 +251,92 @@ function dodo1(kc) {
     })
 
 }
-function resetFilter(){
-   setFilter();
-   render(1);
+function resetFilter() {
+  setFilter();
+  objectFilter = { category: "Đầm", target: "Nữ" }
+  ob = JSON.stringify(objectFilter);
+ 
+  render(1);
 }
-function findByFilter(index,property,propertyDetails){
-     console.log(index+"|"+property+"|"+propertyDetails);
-     render(index,property,propertyDetails)
+
+
+function removeInObject(property, propertyDetails) {
+  let array = objectFilter[property]["$in"];
+  objectFilter[property]["$in"].splice(array.indexOf(propertyDetails), 1); console.log(objectFilter[property]["$in"]);
+  if (array.length == 0) delete objectFilter[property];
+  ob = JSON.stringify(objectFilter);
+
+
+}
+function addInObject(property, propertyDetails) {
+  if (objectFilter[property] == undefined) objectFilter[property] = { $in: [propertyDetails] }
+  else {
+    temp = objectFilter[property]["$in"]
+    temp.push(propertyDetails)
+  }
+  ob = JSON.stringify(objectFilter);
+  console.log(objectFilter[property]["$in"]);
+
+}
+function findByFilter(index, property, propertyDetails) {
+  if (!$("#" + propertyDetails).is(":checked")) {
+    removeInObject(property, propertyDetails)
+  } else {
+    addInObject(property, propertyDetails)
+  }
+ 
+
+  $.ajax({
+    url: "/product/findById",
+    type: "POST",
+    data: { objectFilter: ob }
+  })
+    .then((data) => {
+
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  console.log(index + "|" + property + "|" + propertyDetails);
+  render(1)
+}
+
+function showVal() {
+
+  value = $("#customRange3").val();
+  $(".minPrice").html(value);
+  objectFilter["price"] = { $lte: Number.parseInt(value) };
+  ob = JSON.stringify(objectFilter);
+  render(1);
+
+}
+function chooseColor(colortag) {
+  var tag = $(colortag).css("padding")
+  if (tag == "0px") {
+    $(colortag).css({
+      "border": "1px solid black",
+      "padding": "2px"
+    })
+    addInObject("color.img", $(colortag).attr("id"))
+  } else {
+    $(colortag).css({
+      "border": "none",
+      "padding": "0px"
+    })
+    removeInObject("color.img", $(colortag).attr("id"))
+  }
+  render(1);
+
+
+
+}
+function searchByName(){
+  var valueSearch=$(".searchInput").val();
+   objectFilter = { name:{$regex:valueSearch,$options:"i"} }
+   ob = JSON.stringify(objectFilter);
+   setFilter();
+
+   render(1)
 }
 
 

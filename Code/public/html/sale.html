@@ -95,7 +95,7 @@
         </div>
         <div class="search">
           <input class="searchInput" type="text" placeholder="Search" />
-          <div class="iconSearch"><i class="fas fa-search"></i></div>
+          <div class="iconSearch" onclick="searchByName()"><i class="fas fa-search"></i></div>
         </div>
       </div>
     </div>
@@ -181,11 +181,12 @@
         <div class="sortBy">
           <p>Sắp xếp theo</p>
           <select>
-            <option value="">Giới thiệu</option>
-            <option value="">Phổ biến</option>
+            <option value="price">Giá thấp đến cao</option>
+            <option value="price">Giá cao đến thấp</option>
+            <option value="dateAdded">Mới nhập</option>
             <option value="">Mới đến</option>
             <option value="">Bình luận hàng đầu</option>
-            <option value="">Đánh giá từ thấp đến cao</option>
+            <option value="">Phổ biến</option>
             <option value="">Đánh giá tư cao đến thấp</option>
           </select>
         </div>

@@ -3,10 +3,9 @@ const router=express.Router();
 const productModel=require("../database/productModel")
 
 router.post("/setFilter",(req, res) => {
-    var category=req.body.categoryName;
-    var target=req.body.target;
-    productModel.aggregate([
-        {$match:{category:category,target:target}},
+    var objectFilter=JSON.parse(req.body.objectFilter);
+ productModel.aggregate([
+     {$match:objectFilter},
         {$project:{_id:0,_v:0,description:0,sale:0,unit:0,dateAdded:0,target:0,name:0,img:0,category:0,price:0}},
         {$project:{allProperty:{$objectToArray:"$$ROOT"}}},
         {$unwind:"$allProperty"},
@@ -22,19 +21,18 @@ router.post("/setFilter",(req, res) => {
 
 
 router.post("/setDetailsProperty",(req, res) => {
-    var category=req.body.categoryName;
-    var target=req.body.target;
     var property=req.body.property;
+    var objectFilter=JSON.parse(req.body.objectFilter);
     var model;
     if(property!="color")
-    model= productModel.aggregate([
-        {$match:{category:category,target:target}},
+    model=  productModel.aggregate([
+        {$match:objectFilter},
         {$group:{_id:"$"+property}},
         {$group:{_id:null,detailProperty:{$addToSet:"$_id"}}}
     ])
     else
-    model=productModel.aggregate([
-        {$match:{category:category,target:target}},
+    model= productModel.aggregate([
+        {$match:objectFilter},
         {$group:{_id:"$"+property+".img"}},
         {$group:{_id:null,detailProperty:{$addToSet:"$_id"}}}])
         
@@ -50,10 +48,9 @@ router.post("/setDetailsProperty",(req, res) => {
 
 router.post("/findMaxMinPrice",(req, res) => {
     
-    var category=req.body.categoryName;
-    var target=req.body.target;
+    var objectFilter=JSON.parse(req.body.objectFilter);
     productModel.aggregate([
-        {$match:{category:category,target:target}},
+        {$match:objectFilter},
         {$group:{_id:null,maxPrice:{$max:"$price"},minPrice:{$min:"$price"}}}
     ])
     .then((data) => {

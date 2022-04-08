@@ -39,10 +39,5 @@ function dodo(kc){
     $($(kc).next()).show();
 }  
 
-function showVal(){
-   $("#customRange3").on("change",()=>{  
-    c=$("#customRange3").val();
-     $(".minPrice").html(c);
-}) 
-}
+
 

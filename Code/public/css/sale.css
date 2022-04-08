@@ -280,6 +280,7 @@
 .productColor img:hover {
   border: 1px solid black;
   padding: 2px;
+  
 }
 
 .allProduct-price i:hover {

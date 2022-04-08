@@ -6,11 +6,21 @@ const bodyParser=require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+router.get('/pr', (req, res,next) => {
+    res.locals.user={th:"hehe"};
+    next();
+},(req, res)=>{
+    console.log(res.locals.user);
+    res.json("dd")
+})
+router.get('/pr1', (req, res)=>{
+    console.log(res.locals.user+"r");
+})
+
 router.post('/findByCategory',async(req,res)=>{
-    var categoryName=req.body.category;
-    var target=req.body.target;
+    var objectFilter=JSON.parse(req.body.objectFilter);
    await productModel.aggregate([
-    {$match:{"category":categoryName,"target":target}},
+    {$match:objectFilter},
      {$group: { _id:"$name" ,price:{$first:"$price"},img:{$first:"$img"},id:{$first:"$_id"}}},
     {$sort:{name:1}}
     ])
@@ -26,11 +36,11 @@ router.post('/findByCategory',async(req,res)=>{
 
 router.post('/findAllColor',async (req,res)=>{
     var productName=req.body.name;
-    var target=req.body.target
-    var property=req.body.property;
-    var propertyDetails=req.body.propertyDetails;
+    var objectFilter=JSON.parse(req.body.objectFilter);
+
     productModel.aggregate([
-    {$match:{"name":productName,target:target,[property]:propertyDetails}},
+    {$match:{"name":productName}},
+    {$match:objectFilter},
     {$group:{_id:"$color.name",img:{$first:"$color.img"},id:{$first:"$_id"}}}
 ])
     .then((data)=>{
@@ -55,13 +65,10 @@ router.post("/findById", async (req, res)=>{
 })
 
 router.post('/findTotalByCategory',async(req,res)=>{
-    var categoryName=req.body.category;
     var numberInPage= Number(req.body.numberInPage);
-    var target=req.body.target;
-    var property=req.body.property;
-    var propertyDetails=req.body.propertyDetails;
-   await productModel.aggregate([
-    {$match:{"category":categoryName,target:target,[property]:propertyDetails}},
+    var objectFilter=JSON.parse(req.body.objectFilter);
+    await productModel.aggregate([
+     {$match:objectFilter},
      {$group: { _id:"$name" ,price:{$first:"$price"},img:{$first:"$img"},id:{$first:"$_id"}}}
      ,{$count:"total"}]
      )
@@ -72,21 +79,24 @@ router.post('/findTotalByCategory',async(req,res)=>{
         res.json(totalPage);
     })
     .catch((err)=>{
-        res.json(err.message)
+        res.json(err)
     })
     
 })
 
 router.post('/findAllProInPageByCategory',async(req,res)=>{
-    var categoryName=req.body.category;
     var index=req.body.index;
     var numberInPage= Number(req.body.numberInPage);
-    var target=req.body.target;
-    var property=req.body.property;
-    var propertyDetails=req.body.propertyDetails;
-    console.log(req.body.ob+"dd");
+    var objectFilter=JSON.parse(req.body.objectFilter);
+    res.locals._search = {
+        enabled: false,
+      };
+    Object.assign(res.locals._search, {
+        he:"dd"
+      });
+
    await productModel.aggregate([
-    {$match:{"category":categoryName,target:target,[property]:propertyDetails}},
+    {$match:objectFilter},
      {$group: { _id:"$name" ,price:{$first:"$price"},img:{$first:"$img"},id:{$first:"$_id"}}},
      {$sort:{price:1}}
     ]

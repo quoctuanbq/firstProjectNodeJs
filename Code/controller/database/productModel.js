@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
   useCreateIndex: true
 });
 
-const shema= new mongoose.Schema({
+const user= new mongoose.Schema({
      name:String,
      price:Number,
      dateAdded:Date,
@@ -25,7 +25,7 @@ const shema= new mongoose.Schema({
 
 },{collection:'product'});
 
-const productModel = new mongoose.model("product",shema);
+const productModel = new mongoose.model("product",user);
 
 
  var properties = "size";
@@ -35,16 +35,21 @@ var t="size";
 var c="XXL"
 var ob={category:"Đầm",size:{$in:["XXL","XS"]}};
 
-// productModel.aggregate([
-//      {$match:JSON.parse(JSON.stringify(ob))}
+// var objectFilter={category:"Đầm",target:"Nữ"}
+// console.log(JSON.stringify(objectFilter));
+// var c=JSON.parse(JSON.stringify(objectFilter));
+// console.log(c.category);
 
-//  ])
-// .then((data) => {
-//    console.log(data);
-// }) 
-// .catch((err) => {
-//   console.log(err.message);
-// }) 
+// var a=[4,5,6];
+// ob={category:"Đầm",target:"Nữ",brand:{$in:["Prada","Gucci"]},material:{$in:[]},color:{$in:[]},size:{$in:[]}}
+console.log(user.query.+"đ");
+// let name="Đầm thắt lưng";
+// let sale=0;
+// productModel.find({name,sale})
+// .then((data)=>{
+//      console.log(data);
+// })
 
 
-module.exports =productModel;
+
+module.exports =productModel
